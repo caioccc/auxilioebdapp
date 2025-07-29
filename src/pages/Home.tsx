@@ -14,11 +14,11 @@ const Home: React.FC = () => {
   console.log('Posts:', posts);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Carregando...</div>;
   }
 
   if (error) {
-    return <div>Error loading posts: {typeof error === 'string' ? error : JSON.stringify(error)}</div>;
+    return <div>Erro ao carregar posts.</div>;
   }
 
   return (
