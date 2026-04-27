@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Avatar, Button, Center, Container, Divider, Group, Image, Paper, Text, Title } from '@mantine/core';
+import { Button, Card } from '../components/ui';
 import { IconArrowLeft } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -26,11 +26,11 @@ const PostDetail: React.FC = () => {
     else navigate('/');
   }, [id, navigate]);
 
-  if (!post) return <Container>Carregando post...</Container>;
+  if (!post) return <div className="text-center py-8">Carregando post...</div>;
 
   return (
-    <Container size="100%">
-      <Group mb="md" align="center" justify="flex-start">
+    <div className="max-w-4xl"role="article" aria-labelledby="post-title">
+      <div className="mb-4 flex items-center">
         <Button
           variant="subtle"
           color="blue"
@@ -39,36 +39,35 @@ const PostDetail: React.FC = () => {
         >
           Voltar
         </Button>
-      </Group>
-      <Title order={2} mb="xs">{post.title?.$t || post.title}</Title>
-      <Group mb="sm">
+      </div>
+      <h2 id="post-title" className="text-2xl font-bold mb-2">{post.title?.$t || post.title}</h2>
+      <div className="flex items-center mb-4 space-x-2">
         {post.author?.[0]?.['gd$image']?.src && (
-          <Avatar
+          <img
             src={post.author[0]['gd$image'].src}
             alt={post.author[0].name?.$t}
-            size={24}
-            radius="xl"
+            className="w-6 h-6 rounded-full"
           />
         )}
-        <Text size="xs" color="dimmed">{post.author?.[0]?.name?.$t}</Text>
-        <Text size="xs" color="dimmed">•</Text>
-        <Text size="xs" color="dimmed">{new Date(post.published?.$t || post.published).toLocaleDateString('pt-BR')}</Text>
-      </Group>
+        <span className="text-sm text-gray-600">{post.author?.[0]?.name?.$t}</span>
+        <span className="text-sm text-gray-600">•</span>
+        <span className="text-sm text-gray-600">{new Date(post.published?.$t || post.published).toLocaleDateString('pt-BR')}</span>
+      </div>
       {post.images && post.images.length > 0 && (
-        <Paper mb="md" radius="md" withBorder>
-          <Image src={post.images[0]} alt="Imagem do post" radius="md" fit="cover" />
-        </Paper>
+        <Card className="mb-4">
+          <img src={post.images[0]} alt="Imagem do post" className="w-full h-auto object-cover rounded-md" />
+        </Card>
       )}
-      <Divider my="md" />
-      <Text size="md" style={{ lineHeight: 1.7 }}>
+      <hr className="my-4 border-gray-300" />
+      <div className="text-base leading-relaxed ml-6">
         <span dangerouslySetInnerHTML={{ __html: post.content?.$t || post.content }} />
-      </Text>
-      <Center mt="xl">
+      </div>
+      <div className="mt-8 flex justify-center">
         <Button variant="light" color="blue" onClick={() => navigate(-1)}>
           Voltar
         </Button>
-      </Center>
-    </Container>
+      </div>
+    </div>
   );
 };
 

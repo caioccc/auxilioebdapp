@@ -1,11 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: light;
+  color: #0f172a; /* Texto escuro para tema claro */
+  background-color: #ffffff; /* Fundo branco */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,11 +17,11 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: #1e40af; /* Primária */
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #1d4ed8; /* Primária 700 */
 }
 
 body {
@@ -28,11 +30,13 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #ffffff;
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 1.875rem; /* 30px */
   line-height: 1.1;
+  font-weight: 700;
 }
 
 button {
@@ -41,13 +45,15 @@ button {
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  font-family: 'Inter', inherit;
+  background-color: #1e40af; /* Primária */
+  color: #ffffff;
   cursor: pointer;
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: #1d4ed8;
+  background-color: #1d4ed8;
 }
 button:focus,
 button:focus-visible {

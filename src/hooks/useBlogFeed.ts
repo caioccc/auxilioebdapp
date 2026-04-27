@@ -1,12 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { notifications } from '@mantine/notifications';
 
-const useBlogFeed = () => {
+const useBlogFeed = (searchQuery: string = '') => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [debouncedQuery, setDebouncedQuery] = useState(searchQuery);
+
+  // Debouncing para a query de busca
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 300); // 300ms de delay
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Filtrar posts baseado na query debounced
+  const filteredPosts = useMemo(() => {
+    if (!debouncedQuery) return posts;
+    return posts.filter((post: any) => {
+      const title = (post.title?.$t || post.title || '').toLowerCase();
+      const content = (post.content?.$t || post.content || '').toLowerCase();
+      const query = debouncedQuery.toLowerCase();
+      return title.includes(query) || content.includes(query);
+    });
+  }, [posts, debouncedQuery]);
 
   useEffect(() => {
     const fetchBlogFeed = async () => {
@@ -70,14 +91,14 @@ const useBlogFeed = () => {
       try {
         const parsed = JSON.parse(localPosts);
         setPosts(parsed);
-      } catch (e) {
+      } catch {
         fetchBlogFeed();
       }
       setLoading(false);
     }
   }, []);
 
-  return { posts, loading, error };
+  return { posts: filteredPosts, loading, error };
 };
 
 export default useBlogFeed;

@@ -67,3 +67,23 @@ export default tseslint.config([
   },
 ])
 ```
+
+## Thumbnails Dinâmicas
+
+Este projeto inclui um sistema de geração de thumbnails dinâmicas para posts do blog. Quando um post não possui uma imagem personalizada, uma thumbnail é gerada automaticamente com base no título e descrição do post.
+
+### Como Funciona
+
+- O hook `useThumbnail` utiliza o Canvas API do navegador para renderizar uma imagem com fundo azul, título em branco e descrição em cinza.
+- As thumbnails são cacheadas no localStorage usando um hash SHA-256 do conteúdo para evitar regenerações desnecessárias.
+- Se não houver imagem personalizada (`imageUrl`), a thumbnail gerada é usada como fallback.
+
+### Personalização
+
+Para personalizar as thumbnails, edite o hook `useThumbnail.ts` em `src/hooks/`. Você pode alterar cores, fontes, layout e dimensões padrão.
+
+Exemplo de uso:
+```tsx
+const thumbnail = useThumbnail({ title: "Meu Título", description: "Minha descrição", width: 800, height: 600 });
+```
+```

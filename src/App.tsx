@@ -1,14 +1,14 @@
-import { AppShell, Burger, Button, Group, Modal, NavLink, Text } from '@mantine/core';
-import { Link } from 'react-router-dom';
+import { Button, Group, Modal, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import React, { useEffect, useState } from 'react';
 import Home from './pages/Home';
 import PostDetail from './pages/PostDetail';
 import { Routes, Route } from 'react-router-dom';
+import BottomNavigationComponent from './components/ui/BottomNavigation';
+import Layout from './components/Layout';
 
 const App: React.FC = () => {
-  const [opened, { toggle }] = useDisclosure();
   const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showInstallBanner, setShowInstallBanner] = useState(false);
@@ -52,14 +52,6 @@ const App: React.FC = () => {
     };
   }, []);
 
-  const handleBlogLinkClick = () => {
-    if (navigator.onLine) {
-      window.open('https://auxilioebd.blogspot.com/', '_blank');
-    } else {
-      openModal();
-    }
-  };
-
   const handleInstallClick = async () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
@@ -97,31 +89,13 @@ const App: React.FC = () => {
         </Group>
       </Modal>
 
-      <AppShell
-        header={{ height: 60 }}
-        navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: !opened } }}
-        padding="md"
-      >
-        <AppShell.Header>
-          <Group h="100%" px="md">
-            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-            <Text>Auxilio EBD</Text>
-          </Group>
-        </AppShell.Header>
-
-        <AppShell.Navbar p="md">
-          <NavLink component={Link} to="/" label="Início" onClick={toggle} />
-          <NavLink href="#posts" label="Posts" onClick={toggle} />
-          <NavLink label="Blog" onClick={handleBlogLinkClick} />
-        </AppShell.Navbar>
-
-        <AppShell.Main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/post/:id" element={<PostDetail />} />
-          </Routes>
-        </AppShell.Main>
-      </AppShell>
+      <Layout onBlogClick={openModal}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/post/:id" element={<PostDetail />} />
+        </Routes>
+        <BottomNavigationComponent />
+      </Layout>
     </>
   );
 };
