@@ -95,7 +95,7 @@ const FALLBACK_CONFIG: PlanObrigadoConfig = {
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const } },
 };
 
 const stagger = {
@@ -404,7 +404,7 @@ export default function ObrigadoRhema() {
                         paddingLeft: "1rem",
                       }}
                     >
-                      <Text fz="lg" fw={700} c="blue.9" italic mb={4}>
+                      <Text fz="lg" fw={700} c="blue.9" fs="italic" mb={4}>
                         “Sou devedor...”
                       </Text>
                       <Text fz="sm" c="gray.5" fw={600}>
