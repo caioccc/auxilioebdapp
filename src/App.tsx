@@ -9,6 +9,7 @@ import BottomNavigationComponent from "./components/ui/BottomNavigation";
 const LandingPage = React.lazy(() => import("./pages/LandingPage"));
 const Home = React.lazy(() => import("./pages/Home"));
 const PostDetail = React.lazy(() => import("./pages/PostDetail"));
+const ObrigadoRhema = React.lazy(() => import("./pages/Obrigado"));
 
 const App: React.FC = () => {
   const [modalOpened, { close: closeModal }] =
@@ -76,6 +77,7 @@ const App: React.FC = () => {
       <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" /></div>}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/obrigado" element={<ObrigadoRhema />} />
           <Route
             path="/blog"
             element={

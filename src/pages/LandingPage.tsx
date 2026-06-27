@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -13,6 +14,7 @@ import {
   Flex,
   Group,
   Image,
+  Modal,
   SimpleGrid,
   Stack,
   Text,
@@ -24,6 +26,7 @@ import {
   rem,
   useMantineTheme,
 } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import {
   IconBrandWhatsapp,
   IconHeartHandshake,
@@ -36,6 +39,7 @@ import {
   IconCalendar,
   IconFileCertificate,
   IconStar,
+  IconExternalLink,
 } from '@tabler/icons-react';
 import OrganizationSchema from '../components/SEO/OrganizationSchema';
 import FaqSchema from '../components/SEO/FaqSchema';
@@ -100,18 +104,35 @@ const deliverables = [
   },
 ];
 
+interface CheckoutInfo {
+  checkoutUrl: string
+  materialUrl: string
+}
+
+// Preencha aqui os links reais do Mercado Pago e dos materiais
+const CHECKOUT_URLS: Record<string, CheckoutInfo> = {
+  'trimestral-adultos': { checkoutUrl: 'https://mpago.la/1M9BSme', materialUrl: 'https://drive.google.com/drive/folders/1LTXDyXeBJZA5C-3g5tKog3z7UO5BbNxq?usp=sharing' },
+  'trimestral-jovens': { checkoutUrl: 'https://mpago.la/2LmyxyZ', materialUrl: 'https://drive.google.com/drive/folders/1_ezn1Yh2CTFRIj_nJSKAPq0Epybs_cjC?usp=sharing' },
+  'anual-adultos': { checkoutUrl: 'https://mpago.la/1RvoFtE', materialUrl: 'https://drive.google.com/drive/folders/1LTXDyXeBJZA5C-3g5tKog3z7UO5BbNxq?usp=sharing' },
+  'anual-jovens': { checkoutUrl: 'https://mpago.la/1r6HBUm', materialUrl: 'https://drive.google.com/drive/folders/1_ezn1Yh2CTFRIj_nJSKAPq0Epybs_cjC?usp=sharing' },
+  'completo-trimestral': { checkoutUrl: 'https://mpago.la/14sBuVo', materialUrl: 'https://drive.google.com/drive/folders/17iqsQ3-RKsoumTIbBj6YdXXo08ffpjHo?usp=sharing' },
+  'completo-anual': { checkoutUrl: 'https://mpago.la/2zWW9DD', materialUrl: 'https://drive.google.com/drive/folders/17iqsQ3-RKsoumTIbBj6YdXXo08ffpjHo?usp=sharing' },
+}
+
 interface Plan {
-  title: string;
-  price: string;
-  subtitle: string;
-  detail: string;
-  image: string | null;
-  highlight: boolean;
-  waMsg: string;
+  planId: string
+  title: string
+  price: string
+  subtitle: string
+  detail: string
+  image: string | null
+  highlight: boolean
+  waMsg: string
 }
 
 const plans: Plan[] = [
   {
+    planId: 'trimestral',
     title: 'Trimestral',
     price: 'R$ 45',
     subtitle: 'por trimestre',
@@ -121,6 +142,7 @@ const plans: Plan[] = [
     waMsg: 'Olá! Quero adquirir o plano Trimestral da Mentoria RHEMA por R$ 45,00.',
   },
   {
+    planId: 'anual',
     title: 'Anual',
     price: 'R$ 135',
     subtitle: 'por ano',
@@ -130,6 +152,7 @@ const plans: Plan[] = [
     waMsg: 'Olá! Quero adquirir o plano Anual da Mentoria RHEMA por R$ 135,00.',
   },
   {
+    planId: 'completo-trimestral',
     title: 'Completo Trimestral',
     price: 'R$ 65',
     subtitle: 'Adultos + Jovens',
@@ -139,6 +162,7 @@ const plans: Plan[] = [
     waMsg: 'Olá! Quero adquirir o plano Completo Trimestral (Adultos + Jovens) por R$ 65,00.',
   },
   {
+    planId: 'completo-anual',
     title: 'Completo Anual',
     price: 'R$ 179',
     subtitle: 'Adultos + Jovens / ano',
@@ -147,7 +171,13 @@ const plans: Plan[] = [
     highlight: false,
     waMsg: 'Olá! Quero adquirir o plano Completo Anual (Adultos + Jovens) por R$ 179,00.',
   },
-];
+]
+
+const MODAL_PLANS = new Set(['trimestral', 'anual'])
+const AUDIENCE_OPTIONS = [
+  { id: 'adultos', label: 'Adultos', image: '/adultos.jpg' },
+  { id: 'jovens', label: 'Jovens', image: '/jovens.jpg' },
+]
 
 const faqData = [
   {
@@ -200,6 +230,8 @@ const stagger = {
 
 export default function MentoriaRhema() {
   const theme = useMantineTheme();
+  const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
 
   return (
     <>
@@ -789,23 +821,56 @@ export default function MentoriaRhema() {
 
                           <Divider />
 
-                          <Button
-                            component="a"
-                            href={waLink(plan.waMsg)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            color={plan.highlight ? 'orange.6' : 'blue.8'}
-                            radius="xl"
-                            fullWidth
-                            leftSection={<IconBrandWhatsapp size={16} />}
-                            style={
-                              plan.highlight
-                                ? { boxShadow: '0 4px 16px rgba(234,88,12,0.25)' }
-                                : {}
-                            }
-                          >
-                            Quero esse plano
-                          </Button>
+                          {MODAL_PLANS.has(plan.planId) ? (
+                            <Button
+                              onClick={() => { setSelectedPlan(plan); openModal(); }}
+                              color={plan.highlight ? 'orange.6' : 'blue.8'}
+                              radius="xl"
+                              fullWidth
+                              leftSection={<IconBrandWhatsapp size={16} />}
+                              style={
+                                plan.highlight
+                                  ? { boxShadow: '0 4px 16px rgba(234,88,12,0.25)' }
+                                  : {}
+                              }
+                            >
+                              Quero esse plano
+                            </Button>
+                          ) : (
+                            <Stack gap="xs">
+                              <Button
+                                component="a"
+                                href={CHECKOUT_URLS[plan.planId].checkoutUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                color={plan.highlight ? 'orange.6' : 'blue.8'}
+                                radius="xl"
+                                fullWidth
+                                rightSection={<IconExternalLink size={16} />}
+                                style={
+                                  plan.highlight
+                                    ? { boxShadow: '0 4px 16px rgba(234,88,12,0.25)' }
+                                    : {}
+                                }
+                              >
+                                Comprar Agora
+                              </Button>
+                              <Button
+                                component="a"
+                                href={waLink(plan.waMsg)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                variant="subtle"
+                                color="gray.6"
+                                radius="xl"
+                                fullWidth
+                                size="xs"
+                                leftSection={<IconBrandWhatsapp size={12} />}
+                              >
+                                Falar pelo WhatsApp
+                              </Button>
+                            </Stack>
+                          )}
                         </Stack>
                       </Card>
                     ))}
@@ -956,6 +1021,84 @@ export default function MentoriaRhema() {
           </Box>
         </AppShellMain>
       </AppShell>
+
+      {/* ── MODAL DE SELEÇÃO (Trimestral / Anual) ──────────────────── */}
+      <Modal
+        opened={modalOpened}
+        onClose={closeModal}
+        title={
+          <Text fw={700} fz="lg" c="blue.9">
+            Escolha o público para {selectedPlan?.title}
+          </Text>
+        }
+        size="lg"
+        radius="xl"
+        padding="xl"
+      >
+        <Stack gap="lg">
+          <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
+            {AUDIENCE_OPTIONS.map((opt) => {
+              const key = `${selectedPlan?.planId}-${opt.id}`
+              const info = CHECKOUT_URLS[key]
+              return (
+                <Card
+                  key={opt.id}
+                  radius="xl"
+                  p="lg"
+                  withBorder
+                  style={{
+                    borderColor: theme.colors.gray[2],
+                    cursor: 'pointer',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onClick={() => window.open(info.checkoutUrl, '_blank', 'noopener noreferrer')}
+                >
+                  <Stack gap="md" align="center" ta="center">
+                    <Image src={opt.image} radius="md" style={{ opacity: 0.85 }} />
+                    <Text fw={700} fz="md" c="blue.9">
+                      {opt.label}
+                    </Text>
+                    <Text fz="xl" fw={800} c="orange.6">
+                      {selectedPlan?.price}
+                    </Text>
+                    <Text fz="xs" c="gray.5">
+                      {selectedPlan?.subtitle}
+                    </Text>
+                    <Button
+                      component="a"
+                      href={''}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      color="blue.8"
+                      radius="xl"
+                      fullWidth
+                      rightSection={<IconExternalLink size={16} />}
+                    >
+                      Assinar {opt.label}
+                    </Button>
+                  </Stack>
+                </Card>
+              )
+            })}
+          </SimpleGrid>
+
+          <Divider label="ou" labelPosition="center" />
+
+          <Button
+            component="a"
+            href={selectedPlan ? waLink(selectedPlan.waMsg) : '#'}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="subtle"
+            color="gray.6"
+            radius="xl"
+            fullWidth
+            leftSection={<IconBrandWhatsapp size={16} />}
+          >
+            Prefiro falar pelo WhatsApp
+          </Button>
+        </Stack>
+      </Modal>
     </>
   );
 }
