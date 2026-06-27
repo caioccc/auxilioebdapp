@@ -215,12 +215,12 @@ export default function MentoriaRhema() {
           content="Da sala vazia a um ensino que edifica e retém os alunos. Descubra a Mentoria RHEMA."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://app.auxilioaomestre.com.br/" />
+        <meta property="og:url" content="https://auxilioaomestre.com.br/" />
         <meta
           name="keywords"
           content="EBD, escola bíblica dominical, CPAD, mentoria, professor, aula, ensino, rhema"
         />
-        <link rel="canonical" href="https://app.auxilioaomestre.com.br/" />
+        <link rel="canonical" href="https://auxilioaomestre.com.br/" />
       </Helmet>
       <FaqSchema items={faqData.map(({ q, a }) => ({ question: q, answer: a }))} />
       <OrganizationSchema />

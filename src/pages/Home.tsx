@@ -83,13 +83,13 @@ const Home: React.FC = () => {
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://app.auxilioaomestre.com.br/blog" />
-        <meta property="og:image" content="https://app.auxilioaomestre.com.br/logo.png" />
+        <meta property="og:url" content="https://auxilioaomestre.com.br/blog" />
+        <meta property="og:image" content="https://auxilioaomestre.com.br/logo.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDescription} />
-        <meta name="twitter:image" content="https://app.auxilioaomestre.com.br/logo.png" />
-        <link rel="canonical" href="https://app.auxilioaomestre.com.br/blog" />
+        <meta name="twitter:image" content="https://auxilioaomestre.com.br/logo.png" />
+        <link rel="canonical" href="https://auxilioaomestre.com.br/blog" />
       </Helmet>
       <OrganizationSchema />
       <div className="min-h-screen bg-gray-50 pb-16 md:pb-0">
