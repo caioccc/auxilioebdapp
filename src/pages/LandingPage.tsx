@@ -111,7 +111,7 @@ interface CheckoutInfo {
 
 // Preencha aqui os links reais do Mercado Pago e dos materiais
 const CHECKOUT_URLS: Record<string, CheckoutInfo> = {
-  'trimestral-adultos': { checkoutUrl: 'https://mpago.la/1M9BSme', materialUrl: 'https://drive.google.com/drive/folders/1LTXDyXeBJZA5C-3g5tKog3z7UO5BbNxq?usp=sharing' },
+  'trimestral-adultos': { checkoutUrl: 'https://mpago.la/1K44RVn', materialUrl: 'https://drive.google.com/drive/folders/1LTXDyXeBJZA5C-3g5tKog3z7UO5BbNxq?usp=sharing' },
   'trimestral-jovens': { checkoutUrl: 'https://mpago.la/2LmyxyZ', materialUrl: 'https://drive.google.com/drive/folders/1_ezn1Yh2CTFRIj_nJSKAPq0Epybs_cjC?usp=sharing' },
   'anual-adultos': { checkoutUrl: 'https://mpago.la/1RvoFtE', materialUrl: 'https://drive.google.com/drive/folders/1LTXDyXeBJZA5C-3g5tKog3z7UO5BbNxq?usp=sharing' },
   'anual-jovens': { checkoutUrl: 'https://mpago.la/1r6HBUm', materialUrl: 'https://drive.google.com/drive/folders/1_ezn1Yh2CTFRIj_nJSKAPq0Epybs_cjC?usp=sharing' },
