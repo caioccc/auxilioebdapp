@@ -1,37 +1,40 @@
-import { Button, Group, Modal, Text } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import { notifications } from '@mantine/notifications';
-import React, { useEffect, useState } from 'react';
-import Home from './pages/Home';
-import PostDetail from './pages/PostDetail';
-import { Routes, Route } from 'react-router-dom';
-import BottomNavigationComponent from './components/ui/BottomNavigation';
-import Layout from './components/Layout';
+import { Button, Group, Modal, Text } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
+import React, { useEffect, useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout";
+import BottomNavigationComponent from "./components/ui/BottomNavigation";
+import Home from "./pages/Home";
+import LandingPage from "./pages/LandingPage";
+import PostDetail from "./pages/PostDetail";
 
 const App: React.FC = () => {
-  const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
+  const [modalOpened, { open: openModal, close: closeModal }] =
+    useDisclosure(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showInstallBanner, setShowInstallBanner] = useState(false);
 
   useEffect(() => {
     const handleOnline = () => {
       notifications.show({
-        title: 'Conectado',
-        message: 'Você está online novamente.',
-        color: 'green',
+        title: "Conectado",
+        message: "Você está online novamente.",
+        color: "green",
       });
     };
 
     const handleOffline = () => {
       notifications.show({
-        title: 'Sem conexão',
-        message: 'Você está offline. Algumas funcionalidades podem não estar disponíveis.',
-        color: 'red',
+        title: "Sem conexão",
+        message:
+          "Você está offline. Algumas funcionalidades podem não estar disponíveis.",
+        color: "red",
       });
     };
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     if (!navigator.onLine) {
       handleOffline();
@@ -43,12 +46,12 @@ const App: React.FC = () => {
       setDeferredPrompt(e);
       setShowInstallBanner(true);
     };
-    window.addEventListener('beforeinstallprompt', beforeInstallHandler);
+    window.addEventListener("beforeinstallprompt", beforeInstallHandler);
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-      window.removeEventListener('beforeinstallprompt', beforeInstallHandler);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("beforeinstallprompt", beforeInstallHandler);
     };
   }, []);
 
@@ -56,7 +59,7 @@ const App: React.FC = () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
+      if (outcome === "accepted") {
         setShowInstallBanner(false);
       }
     }
@@ -64,7 +67,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      {showInstallBanner && (
+      {/* {showInstallBanner && (
         <div style={{
           position: 'fixed',
           bottom: 0,
@@ -81,21 +84,37 @@ const App: React.FC = () => {
             Instalar
           </Button>
         </div>
-      )}
+      )} */}
       <Modal opened={modalOpened} onClose={closeModal} title="Aviso de Conexão">
-        <Text>É necessário ter conexão com a internet para acessar o blog.</Text>
+        <Text>
+          É necessário ter conexão com a internet para acessar o blog.
+        </Text>
         <Group mt="md">
           <Button onClick={closeModal}>Ok</Button>
         </Group>
       </Modal>
 
-      <Layout onBlogClick={openModal}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/post/:id" element={<PostDetail />} />
-        </Routes>
-        <BottomNavigationComponent />
-      </Layout>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route
+          path="/blog"
+          element={
+            <Layout onBlogClick={openModal}>
+              <Home />
+              <BottomNavigationComponent />
+            </Layout>
+          }
+        />
+        <Route
+          path="/post/:id"
+          element={
+            <Layout onBlogClick={openModal}>
+              <PostDetail />
+              <BottomNavigationComponent />
+            </Layout>
+          }
+        />
+      </Routes>
     </>
   );
 };

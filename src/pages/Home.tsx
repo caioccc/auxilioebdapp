@@ -14,7 +14,7 @@ function getText(val?: string | { $t: string }) {
 
 const Home: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const { posts, loading, error } = useBlogFeed(searchQuery);
+  const { posts, loading, error, refetch } = useBlogFeed(searchQuery);
   const [refreshing, setRefreshing] = useState(false);
 
   const handleRefresh = async () => {
@@ -28,17 +28,12 @@ const Home: React.FC = () => {
     }
     setRefreshing(true);
     try {
-      const response = await fetch("https://corsproxy.io/?https://auxilioebd.blogspot.com/feeds/posts/default?alt=json");
-      const data = await response.json();
-      const entries = data.feed.entry || [];
-      localStorage.setItem('posts', JSON.stringify(entries));
-      localStorage.setItem('posts_last_fetch', new Date().toISOString());
+      await refetch();
       notifications.show({
         title: 'Atualizado',
         message: 'Posts atualizados com sucesso!',
         color: 'green',
       });
-      window.location.reload();
     } catch {
       notifications.show({
         title: 'Erro',

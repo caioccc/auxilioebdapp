@@ -1,45 +1,36 @@
-import { renderHook, act, waitFor } from '@testing-library/react';
-import axios from 'axios';
-import { useBlogFeed } from './useBlogFeed';
+import { renderHook, waitFor } from '@testing-library/react';
+import useBlogFeed from './useBlogFeed';
+import { fetchBlogFeedViaJSONP } from '../services/feedService';
+import { savePostsToStorage, loadPostsFromStorage, getLastFetchDate } from '../utils/storage';
 
-// Mock axios
-jest.mock('axios');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+jest.mock('../services/feedService');
+jest.mock('../utils/storage');
 
-// Mock localStorage
-const localStorageMock = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
-};
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock,
-});
+const mockedFetchJSONP = fetchBlogFeedViaJSONP as jest.MockedFunction<typeof fetchBlogFeedViaJSONP>;
+const mockedSavePosts = savePostsToStorage as jest.MockedFunction<typeof savePostsToStorage>;
+const mockedLoadPosts = loadPostsFromStorage as jest.MockedFunction<typeof loadPostsFromStorage>;
+const mockedGetLastFetch = getLastFetchDate as jest.MockedFunction<typeof getLastFetchDate>;
 
-// Mock navigator.onLine
-Object.defineProperty(window.navigator, 'onLine', {
-  writable: true,
-  value: true,
-});
-
-// Mock notifications
 jest.mock('@mantine/notifications', () => ({
   notifications: {
     show: jest.fn(),
   },
 }));
 
+Object.defineProperty(window.navigator, 'onLine', {
+  writable: true,
+  value: true,
+});
+
 describe('useBlogFeed', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    localStorageMock.getItem.mockClear();
-    localStorageMock.setItem.mockClear();
   });
 
   it('fetches posts on mount when online and no cache', async () => {
-    const mockData = { feed: { entry: [{ title: 'Post 1' }] } };
-    mockedAxios.get.mockResolvedValue({ data: mockData });
+    mockedLoadPosts.mockReturnValue(null);
+    mockedGetLastFetch.mockReturnValue(null);
+    mockedFetchJSONP.mockResolvedValue([{ title: 'Post 1' }]);
 
     const { result } = renderHook(() => useBlogFeed());
 
@@ -50,16 +41,13 @@ describe('useBlogFeed', () => {
     });
 
     expect(result.current.posts).toEqual([{ title: 'Post 1' }]);
-    expect(localStorageMock.setItem).toHaveBeenCalled();
+    expect(mockedSavePosts).toHaveBeenCalledWith([{ title: 'Post 1' }]);
   });
 
   it('loads from cache if available and same day', async () => {
     const cachedPosts = [{ title: 'Cached Post' }];
-    localStorageMock.getItem.mockImplementation((key) => {
-      if (key === 'posts') return JSON.stringify(cachedPosts);
-      if (key === 'posts_last_fetch') return new Date().toISOString();
-      return null;
-    });
+    mockedLoadPosts.mockReturnValue(cachedPosts);
+    mockedGetLastFetch.mockReturnValue(new Date().toISOString());
 
     const { result } = renderHook(() => useBlogFeed());
 
@@ -68,7 +56,7 @@ describe('useBlogFeed', () => {
     });
 
     expect(result.current.posts).toEqual(cachedPosts);
-    expect(mockedAxios.get).not.toHaveBeenCalled();
+    expect(mockedFetchJSONP).not.toHaveBeenCalled();
   });
 
   it('filters posts based on search query', async () => {
@@ -76,7 +64,9 @@ describe('useBlogFeed', () => {
       { title: { $t: 'React' }, content: { $t: 'About React' } },
       { title: { $t: 'Vue' }, content: { $t: 'About Vue' } },
     ];
-    mockedAxios.get.mockResolvedValue({ data: { feed: { entry: posts } } });
+    mockedLoadPosts.mockReturnValue(null);
+    mockedGetLastFetch.mockReturnValue(null);
+    mockedFetchJSONP.mockResolvedValue(posts);
 
     const { result, rerender } = renderHook(({ query }) => useBlogFeed(query), {
       initialProps: { query: '' },
@@ -94,15 +84,18 @@ describe('useBlogFeed', () => {
       expect(result.current.posts).toHaveLength(1);
     });
 
-    expect(result.current.posts[0].title.$t).toBe('React');
+    const postsArray = result.current.posts as Array<{ title?: { $t?: string } }>;
+    expect(postsArray[0]?.title?.$t).toBe('React');
   });
 
-  it('handles posts without imageUrl by ensuring thumbnail generation is possible', async () => {
+  it('handles posts without imageUrl', async () => {
     const posts = [
       { title: { $t: 'Post without image' }, content: { $t: 'Description' } },
       { title: { $t: 'Post with image' }, content: { $t: 'Description' }, media$thumbnail: { url: 'http://example.com/image.jpg' } },
     ];
-    mockedAxios.get.mockResolvedValue({ data: { feed: { entry: posts } } });
+    mockedLoadPosts.mockReturnValue(null);
+    mockedGetLastFetch.mockReturnValue(null);
+    mockedFetchJSONP.mockResolvedValue(posts);
 
     const { result } = renderHook(() => useBlogFeed());
 
@@ -111,6 +104,20 @@ describe('useBlogFeed', () => {
     });
 
     expect(result.current.posts).toHaveLength(2);
-    // Note: Actual thumbnail generation is tested in useThumbnail and PostCard tests
+  });
+
+  it('exposes refetch function', async () => {
+    mockedLoadPosts.mockReturnValue(null);
+    mockedGetLastFetch.mockReturnValue(null);
+    mockedFetchJSONP.mockResolvedValue([{ title: 'First fetch' }]);
+
+    const { result } = renderHook(() => useBlogFeed());
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    expect(result.current.refetch).toBeDefined();
+    expect(typeof result.current.refetch).toBe('function');
   });
 });

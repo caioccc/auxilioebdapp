@@ -1,22 +1,63 @@
-import axios from 'axios';
-import { fetchBlogFeed } from './feedService';
-
-jest.mock('axios');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+import { fetchBlogFeedViaJSONP } from './feedService';
 
 describe('feedService', () => {
-  it('fetches blog feed successfully', async () => {
-    const mockData = { feed: { entry: [{ title: 'Post' }] } };
-    mockedAxios.get.mockResolvedValue({ data: mockData });
+  let appendedScripts: HTMLScriptElement[];
 
-    const result = await fetchBlogFeed();
-    expect(result).toEqual([{ title: 'Post' }]);
-    expect(mockedAxios.get).toHaveBeenCalledWith('https://auxilioebd.blogspot.com/feeds/posts/default?alt=json');
+  beforeEach(() => {
+    appendedScripts = [];
+    const realCreate = document.createElement.bind(document);
+
+    jest.spyOn(document, 'createElement').mockImplementation((tag) => {
+      if (tag === 'script') {
+        const el = realCreate(tag);
+        appendedScripts.push(el);
+        return el;
+      }
+      return realCreate(tag);
+    });
+
+    jest.spyOn(document.body, 'appendChild').mockImplementation((node) => node);
   });
 
-  it('throws error on fetch failure', async () => {
-    mockedAxios.get.mockRejectedValue(new Error('Network error'));
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
 
-    await expect(fetchBlogFeed()).rejects.toThrow('Network error');
+  const getLastScriptSrc = (): string => {
+    const script = appendedScripts[appendedScripts.length - 1];
+    const src = (script as unknown as { src: string }).src;
+    return src || script.getAttribute('src') || '';
+  };
+
+  it('constructs URL with correct parameters', () => {
+    fetchBlogFeedViaJSONP(200);
+    const src = getLastScriptSrc();
+    expect(src).toContain('alt=json-in-script');
+    expect(src).toContain('callback=');
+    expect(src).toContain('max-results=200');
+  });
+
+  it('resolves when callback is invoked', async () => {
+    const mockData = { feed: { entry: [{ title: 'Post 1' }] } };
+    const promise = fetchBlogFeedViaJSONP(50);
+    const src = getLastScriptSrc();
+    const match = src.match(/callback=([^&]+)/);
+    const cbName = match ? match[1] : '';
+
+    const win = window as unknown as Record<string, (data: unknown) => void>;
+    if (win[cbName]) {
+      win[cbName](mockData);
+    }
+
+    const result = await promise;
+    expect(result).toEqual([{ title: 'Post 1' }]);
+  });
+
+  it('rejects on timeout', async () => {
+    jest.useFakeTimers();
+    const promise = fetchBlogFeedViaJSONP(100);
+    jest.advanceTimersByTime(16000);
+    await expect(promise).rejects.toThrow('Tempo limite excedido');
+    jest.useRealTimers();
   });
 });

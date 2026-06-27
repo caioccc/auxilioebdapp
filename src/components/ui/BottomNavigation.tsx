@@ -12,7 +12,7 @@ const BottomNavigationComponent: React.FC = () => {
 
   const isActive = (path: string) => {
     if (path === 'home') return location.pathname === '/';
-    if (path === 'posts') return location.pathname.startsWith('/post');
+    if (path === 'posts') return location.pathname === '/blog' || location.pathname.startsWith('/post');
     return false;
   };
 
@@ -30,7 +30,7 @@ const BottomNavigationComponent: React.FC = () => {
           <span className="text-xs mt-1">Início</span>
         </button>
         <button
-          onClick={() => handleTabChange('/')}
+          onClick={() => handleTabChange('/blog')}
           className={`flex flex-col items-center justify-center w-full h-full transition-colors ${
             isActive('posts') ? 'text-blue-600' : 'text-gray-500'
           }`}

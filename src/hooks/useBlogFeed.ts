@@ -1,24 +1,21 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from "axios";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { notifications } from '@mantine/notifications';
+import { fetchBlogFeedViaJSONP } from '../services/feedService';
+import { savePostsToStorage, loadPostsFromStorage, getLastFetchDate } from '../utils/storage';
 
 const useBlogFeed = (searchQuery: string = '') => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [debouncedQuery, setDebouncedQuery] = useState(searchQuery);
 
-  // Debouncing para a query de busca
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(searchQuery);
-    }, 300); // 300ms de delay
-
+    }, 300);
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // Filtrar posts baseado na query debounced
   const filteredPosts = useMemo(() => {
     if (!debouncedQuery) return posts;
     return posts.filter((post: any) => {
@@ -29,50 +26,38 @@ const useBlogFeed = (searchQuery: string = '') => {
     });
   }, [posts, debouncedQuery]);
 
-  useEffect(() => {
-    const fetchBlogFeed = async () => {
+  const fetchBlogFeed = useCallback(async () => {
+    try {
+      const entries = await fetchBlogFeedViaJSONP(100);
+      setPosts(entries);
       try {
-        const response = await axios.get(
-          "https://corsproxy.io/?https://auxilioebd.blogspot.com/feeds/posts/default?alt=json"
-        );
-        const entries = response.data.feed.entry || [];
-        setPosts(entries);
-        try {
-          localStorage.setItem('posts', JSON.stringify(entries));
-          localStorage.setItem('posts_last_fetch', new Date().toISOString());
-        } catch (e) {
-          console.warn('Não foi possível salvar os posts no localStorage:', e);
-        }
-      } catch (err: any) {
-        setError(err.message || "Erro ao carregar o feed");
-        // Sempre tenta carregar do localStorage em caso de erro
-        const localPosts = localStorage.getItem('posts');
-        if (localPosts) {
-          try {
-            const parsed = JSON.parse(localPosts);
-            setPosts(parsed);
-          } catch (e) {
-            console.warn('Erro ao ler posts do localStorage:', e);
-          }
-        }
-      } finally {
-        setLoading(false);
+        savePostsToStorage(entries);
+      } catch (e) {
+        console.warn('Não foi possível salvar os posts no localStorage:', e);
       }
-    };
+      return entries;
+    } catch (err: any) {
+      const msg = err.message || "Erro ao carregar o feed";
+      setError(msg);
+      const localPosts = loadPostsFromStorage();
+      if (localPosts) {
+        setPosts(localPosts);
+      }
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-    const localPosts = localStorage.getItem('posts');
-    const lastFetch = localStorage.getItem('posts_last_fetch');
+  useEffect(() => {
+    const localPosts = loadPostsFromStorage();
+    const lastFetch = getLastFetchDate();
     const today = new Date().toISOString().slice(0, 10);
     const lastFetchDay = lastFetch ? lastFetch.slice(0, 10) : null;
 
     if (!navigator.onLine) {
       if (localPosts) {
-        try {
-          const parsed = JSON.parse(localPosts);
-          setPosts(parsed);
-        } catch (e) {
-          console.warn('Erro ao ler posts do localStorage:', e);
-        }
+        setPosts(localPosts);
       } else {
         notifications.show({
           title: 'Sem conexão',
@@ -84,21 +69,16 @@ const useBlogFeed = (searchQuery: string = '') => {
       return;
     }
 
-    // Se tem internet
     if (!localPosts || lastFetchDay !== today) {
       fetchBlogFeed();
     } else {
-      try {
-        const parsed = JSON.parse(localPosts);
-        setPosts(parsed);
-      } catch {
-        fetchBlogFeed();
-      }
+      setPosts(localPosts);
       setLoading(false);
     }
-  }, []);
+  }, [fetchBlogFeed]);
 
-  return { posts: filteredPosts, loading, error };
+  return { posts: filteredPosts, loading, error, refetch: fetchBlogFeed };
 };
 
+export { useBlogFeed };
 export default useBlogFeed;

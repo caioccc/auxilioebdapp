@@ -3,10 +3,12 @@ import { Button, Card } from '../components/ui';
 import { IconArrowLeft } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { loadPostsFromStorage } from '../utils/storage';
 
 const getPostFromStorage = (id: string) => {
   try {
-    const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+    const posts = loadPostsFromStorage();
+    if (!posts) return null;
     return posts.find((p: any) => (p.id?.$t || p.id) === id);
   } catch {
     return null;
@@ -23,7 +25,7 @@ const PostDetail: React.FC = () => {
     const found = getPostFromStorage(decodeURIComponent(id));
     console.log('Post found:', found);
     if (found) setPost(found);
-    else navigate('/');
+    else navigate('/blog');
   }, [id, navigate]);
 
   if (!post) return <div className="text-center py-8">Carregando post...</div>;
