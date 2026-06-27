@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { IconRefresh, IconSearch } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import ImageCarousel from '../components/ImageCarousel';
 import PostCard from '../components/PostCard';
 import useBlogFeed from '../hooks/useBlogFeed';
 import { TextInput, Button, BottomNavigation } from '../components/ui';
+import OrganizationSchema from '../components/SEO/OrganizationSchema';
 import type { BlogPost } from '../types/BlogPost';
 
 function getText(val?: string | { $t: string }) {
@@ -69,8 +71,28 @@ const Home: React.FC = () => {
     );
   }
 
+  const pageTitle = 'Blog - Auxílio ao Mestre | EBD';
+  const pageDescription = 'Acompanhe as últimas lições, estudos e recursos para professores da Escola Bíblica Dominical (CPAD Adultos e Jovens).';
+
   return (
-    <div className="min-h-screen bg-gray-50 pb-16 md:pb-0">
+    <>
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        <meta name="keywords" content="EBD, escola bíblica dominical, CPAD, blog, lições, estudo bíblico, professores" />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://app.auxilioaomestre.com.br/blog" />
+        <meta property="og:image" content="https://app.auxilioaomestre.com.br/logo.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={pageDescription} />
+        <meta name="twitter:image" content="https://app.auxilioaomestre.com.br/logo.png" />
+        <link rel="canonical" href="https://app.auxilioaomestre.com.br/blog" />
+      </Helmet>
+      <OrganizationSchema />
+      <div className="min-h-screen bg-gray-50 pb-16 md:pb-0">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="container mx-auto px-4 py-4">
@@ -158,6 +180,7 @@ const Home: React.FC = () => {
       </main>
       <BottomNavigation />
     </div>
+    </>
   );
 }
 

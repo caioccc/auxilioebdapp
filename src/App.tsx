@@ -1,13 +1,14 @@
 import { Button, Group, Modal, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import BottomNavigationComponent from "./components/ui/BottomNavigation";
-import Home from "./pages/Home";
-import LandingPage from "./pages/LandingPage";
-import PostDetail from "./pages/PostDetail";
+
+const LandingPage = React.lazy(() => import("./pages/LandingPage"));
+const Home = React.lazy(() => import("./pages/Home"));
+const PostDetail = React.lazy(() => import("./pages/PostDetail"));
 
 const App: React.FC = () => {
   const [modalOpened, { close: closeModal }] =
@@ -72,27 +73,29 @@ const App: React.FC = () => {
         </Group>
       </Modal>
 
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route
-          path="/blog"
-          element={
-            <Layout>
-              <Home />
-              <BottomNavigationComponent />
-            </Layout>
-          }
-        />
-        <Route
-          path="/post/:id"
-          element={
-            <Layout>
-              <PostDetail />
-              <BottomNavigationComponent />
-            </Layout>
-          }
-        />
-      </Routes>
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" /></div>}>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route
+            path="/blog"
+            element={
+              <Layout>
+                <Home />
+                <BottomNavigationComponent />
+              </Layout>
+            }
+          />
+          <Route
+            path="/post/:id"
+            element={
+              <Layout>
+                <PostDetail />
+                <BottomNavigationComponent />
+              </Layout>
+            }
+          />
+        </Routes>
+      </Suspense>
     </>
   );
 };

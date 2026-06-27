@@ -32,7 +32,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ id, images, title, conten
           <Carousel.Slide key={index}>
             <img
               src={image || 'https://placehold.co/600x400?font=roboto&text=Sem+Imagem'}
-              alt={`Slide ${index + 1}`}
+              alt={title}
               className="w-full h-auto"
             />
           </Carousel.Slide>

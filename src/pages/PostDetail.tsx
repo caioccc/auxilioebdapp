@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Helmet } from 'react-helmet-async';
 import { Button, Card } from '../components/ui';
 import { IconArrowLeft } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { loadPostsFromStorage } from '../utils/storage';
+import OrganizationSchema from '../components/SEO/OrganizationSchema';
+import BreadcrumbSchema from '../components/SEO/BreadcrumbSchema';
+import BlogPostingSchema from '../components/SEO/BlogPostingSchema';
 
 const getPostFromStorage = (id: string) => {
   try {
@@ -23,15 +27,54 @@ const PostDetail: React.FC = () => {
   useEffect(() => {
     if (!id) return;
     const found = getPostFromStorage(decodeURIComponent(id));
-    console.log('Post found:', found);
     if (found) setPost(found);
     else navigate('/blog');
   }, [id, navigate]);
 
   if (!post) return <div className="text-center py-8">Carregando post...</div>;
 
+  const postTitle = post.title?.$t || post.title || '';
+  const postDescription = post.description?.$t || post.description || postTitle;
+  const postImage = post.images?.[0] || '';
+  const postPublished = post.published?.$t || post.published || '';
+  const authorName = post.author?.[0]?.name?.$t || '';
+  const authorImage = post.author?.[0]?.['gd$image']?.src || '';
+  const postUrl = `https://app.auxilioaomestre.com.br/post/${encodeURIComponent(id || '')}`;
+
   return (
-    <div className="max-w-4xl"role="article" aria-labelledby="post-title">
+    <>
+      <Helmet>
+        <title>{postTitle} - Auxílio ao Mestre | EBD</title>
+        <meta name="description" content={postDescription} />
+        <meta name="keywords" content="EBD, escola bíblica dominical, CPAD, lição, estudo bíblico" />
+        <meta property="og:title" content={`${postTitle} - Auxílio ao Mestre`} />
+        <meta property="og:description" content={postDescription} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={postUrl} />
+        <meta property="og:image" content={postImage || 'https://app.auxilioaomestre.com.br/logo.png'} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${postTitle} - Auxílio ao Mestre`} />
+        <meta name="twitter:description" content={postDescription} />
+        <meta name="twitter:image" content={postImage || 'https://app.auxilioaomestre.com.br/logo.png'} />
+        <link rel="canonical" href={postUrl} />
+      </Helmet>
+      <OrganizationSchema />
+      <BreadcrumbSchema
+        items={[
+          { name: 'Início', url: 'https://app.auxilioaomestre.com.br/' },
+          { name: 'Blog', url: 'https://app.auxilioaomestre.com.br/blog' },
+          { name: postTitle, url: postUrl },
+        ]}
+      />
+      <BlogPostingSchema
+        headline={postTitle}
+        description={postDescription}
+        imageUrl={postImage}
+        datePublished={postPublished}
+        author={{ name: authorName, image: authorImage }}
+        url={postUrl}
+      />
+      <div className="max-w-4xl" role="article" aria-labelledby="post-title">
       <div className="mb-4 flex items-center">
         <Button
           variant="subtle"
@@ -57,7 +100,7 @@ const PostDetail: React.FC = () => {
       </div>
       {post.images && post.images.length > 0 && (
         <Card className="mb-4">
-          <img src={post.images[0]} alt="Imagem do post" className="w-full h-auto object-cover rounded-md" />
+          <img src={post.images[0]} alt={postTitle} className="w-full h-auto object-cover rounded-md" />
         </Card>
       )}
       <hr className="my-4 border-gray-300" />
@@ -70,6 +113,7 @@ const PostDetail: React.FC = () => {
         </Button>
       </div>
     </div>
+    </>
   );
 };
 

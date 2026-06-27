@@ -1,4 +1,4 @@
-import { HelmetProvider, Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -37,6 +37,8 @@ import {
   IconFileCertificate,
   IconStar,
 } from '@tabler/icons-react';
+import OrganizationSchema from '../components/SEO/OrganizationSchema';
+import FaqSchema from '../components/SEO/FaqSchema';
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -200,7 +202,7 @@ export default function MentoriaRhema() {
   const theme = useMantineTheme();
 
   return (
-    <HelmetProvider>
+    <>
       <Helmet>
         <title>Mentoria RHEMA — Transforme suas aulas da EBD</title>
         <meta
@@ -213,13 +215,15 @@ export default function MentoriaRhema() {
           content="Da sala vazia a um ensino que edifica e retém os alunos. Descubra a Mentoria RHEMA."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://auxilioaomestre.com.br/" />
+        <meta property="og:url" content="https://app.auxilioaomestre.com.br/" />
         <meta
           name="keywords"
           content="EBD, escola bíblica dominical, CPAD, mentoria, professor, aula, ensino, rhema"
         />
-        <link rel="canonical" href="https://auxilioaomestre.com.br/" />
+        <link rel="canonical" href="https://app.auxilioaomestre.com.br/" />
       </Helmet>
+      <FaqSchema items={faqData.map(({ q, a }) => ({ question: q, answer: a }))} />
+      <OrganizationSchema />
 
       <AppShell header={{ height: 70 }}>
         {/* ── HEADER ──────────────────────────────────────────────── */}
@@ -266,7 +270,8 @@ export default function MentoriaRhema() {
                 <Button
                   component="a"
                   href={waLink('Olá! Gostaria de saber mais sobre a Mentoria RHEMA.')}
-                  target="_blank"
+                   target="_blank"
+                   rel="noopener noreferrer"
                   color="orange.6"
                   size="sm"
                   radius="xl"
@@ -282,13 +287,14 @@ export default function MentoriaRhema() {
                 component="a"
                 href={waLink('Olá! Gostaria de saber mais sobre a Mentoria RHEMA.')}
                 target="_blank"
-                color="orange.6"
-                size="xs"
-                radius="xl"
-                leftSection={<IconBrandWhatsapp size={14} />}
-              >
-                Contato
-              </Button>
+                  rel="noopener noreferrer"
+                  color="orange.6"
+                  size="xs"
+                  radius="xl"
+                  leftSection={<IconBrandWhatsapp size={14} />}
+                >
+                  Contato
+                </Button>
             </Flex>
           </Container>
         </AppShellHeader>
@@ -384,6 +390,7 @@ export default function MentoriaRhema() {
                           component="a"
                           href={waLink('Olá! Quero transformar minhas aulas da EBD com a Mentoria RHEMA!')}
                           target="_blank"
+                          rel="noopener noreferrer"
                           color="orange.6"
                           size="lg"
                           radius="xl"
@@ -786,6 +793,7 @@ export default function MentoriaRhema() {
                             component="a"
                             href={waLink(plan.waMsg)}
                             target="_blank"
+                            rel="noopener noreferrer"
                             color={plan.highlight ? 'orange.6' : 'blue.8'}
                             radius="xl"
                             fullWidth
@@ -877,6 +885,7 @@ export default function MentoriaRhema() {
                     component="a"
                     href={waLink('Olá! Quero começar agora com a Mentoria RHEMA!')}
                     target="_blank"
+                    rel="noopener noreferrer"
                     color="orange.5"
                     size="xl"
                     radius="xl"
@@ -929,6 +938,7 @@ export default function MentoriaRhema() {
                   <Anchor
                     href={waLink('Olá! Quero entrar em contato com a Mentoria RHEMA.')}
                     target="_blank"
+                    rel="noopener noreferrer"
                     c="blue.3"
                     fz="sm"
                     underline="never"
@@ -946,6 +956,6 @@ export default function MentoriaRhema() {
           </Box>
         </AppShellMain>
       </AppShell>
-    </HelmetProvider>
+    </>
   );
 }
