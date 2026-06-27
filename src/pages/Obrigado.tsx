@@ -48,37 +48,37 @@ interface PlanObrigadoConfig {
 const PLAN_CONFIG: Record<string, PlanObrigadoConfig> = {
   'trimestral-adultos': {
     title: 'Sua Mentoria Trimestral — Adultos começa agora!',
-    materialUrl: '#',
+    materialUrl: 'https://drive.google.com/drive/folders/1LTXDyXeBJZA5C-3g5tKog3z7UO5BbNxq?usp=sharing',
     waSupportMsg: 'Olá! Acabei de assinar o plano Trimestral — Adultos e preciso de suporte.',
     pageTitle: 'Mentoria Trimestral — Adultos | Acesso ao Material',
   },
   'trimestral-jovens': {
     title: 'Sua Mentoria Trimestral — Jovens começa agora!',
-    materialUrl: '#',
+    materialUrl: 'https://drive.google.com/drive/folders/1_ezn1Yh2CTFRIj_nJSKAPq0Epybs_cjC?usp=sharing',
     waSupportMsg: 'Olá! Acabei de assinar o plano Trimestral — Jovens e preciso de suporte.',
     pageTitle: 'Mentoria Trimestral — Jovens | Acesso ao Material',
   },
   'anual-adultos': {
     title: 'Sua Mentoria Anual — Adultos começa agora!',
-    materialUrl: '#',
+    materialUrl: 'https://drive.google.com/drive/folders/1LTXDyXeBJZA5C-3g5tKog3z7UO5BbNxq?usp=sharing',
     waSupportMsg: 'Olá! Acabei de assinar o plano Anual — Adultos e preciso de suporte.',
     pageTitle: 'Mentoria Anual — Adultos | Acesso ao Material',
   },
   'anual-jovens': {
     title: 'Sua Mentoria Anual — Jovens começa agora!',
-    materialUrl: '#',
+    materialUrl: 'https://drive.google.com/drive/folders/1_ezn1Yh2CTFRIj_nJSKAPq0Epybs_cjC?usp=sharing',
     waSupportMsg: 'Olá! Acabei de assinar o plano Anual — Jovens e preciso de suporte.',
     pageTitle: 'Mentoria Anual — Jovens | Acesso ao Material',
   },
   'completo-trimestral': {
     title: 'Seu plano Completo Trimestral está liberado!',
-    materialUrl: '#',
+    materialUrl: 'https://drive.google.com/drive/folders/17iqsQ3-RKsoumTIbBj6YdXXo08ffpjHo?usp=sharing',
     waSupportMsg: 'Olá! Acabei de assinar o plano Completo Trimestral e preciso de suporte.',
     pageTitle: 'Completo Trimestral | Acesso ao Material',
   },
   'completo-anual': {
     title: 'Seu plano Completo Anual está liberado!',
-    materialUrl: '#',
+    materialUrl: 'https://drive.google.com/drive/folders/17iqsQ3-RKsoumTIbBj6YdXXo08ffpjHo?usp=sharing',
     waSupportMsg: 'Olá! Acabei de assinar o plano Completo Anual e preciso de suporte.',
     pageTitle: 'Completo Anual | Acesso ao Material',
   },
