@@ -5,6 +5,7 @@ import { Card as MantineCard } from '@mantine/core';
 interface CardProps extends React.ComponentProps<typeof MantineCard> {
   children?: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const Card: React.FC<CardProps> = ({ children, className, ...props }) => {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import PostCard from './PostCard';
@@ -31,7 +30,7 @@ describe('PostCard', () => {
       </MemoryRouter>
     );
 
-    const img = screen.getByAltText('Test Post');
+    const img = screen.getByAltText('Test Post') as HTMLImageElement;
     expect(img.src).toBe('http://example.com/image.jpg');
   });
 
@@ -42,7 +41,7 @@ describe('PostCard', () => {
       </MemoryRouter>
     );
 
-    const img = screen.getByAltText('Test Post');
+    const img = screen.getByAltText('Test Post') as HTMLImageElement;
     expect(img.src).toBe('data:image/png;base64,thumbnail');
   });
 

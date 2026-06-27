@@ -8,19 +8,10 @@ import "../index.css";
  */
 const Layout: React.FC<{
   children: React.ReactNode;
-  onBlogClick: () => void;
-}> = ({ children, onBlogClick }) => {
+}> = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
-  const handleBlogLinkClick = () => {
-    if (navigator.onLine) {
-      window.open("https://auxilioebd.blogspot.com/", "_blank");
-    } else {
-      onBlogClick();
-    }
-  };
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">

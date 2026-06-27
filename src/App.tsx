@@ -1,7 +1,7 @@
 import { Button, Group, Modal, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import BottomNavigationComponent from "./components/ui/BottomNavigation";
@@ -10,11 +10,8 @@ import LandingPage from "./pages/LandingPage";
 import PostDetail from "./pages/PostDetail";
 
 const App: React.FC = () => {
-  const [modalOpened, { open: openModal, close: closeModal }] =
+  const [modalOpened, { close: closeModal }] =
     useDisclosure(false);
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [showInstallBanner, setShowInstallBanner] = useState(false);
-
   useEffect(() => {
     const handleOnline = () => {
       notifications.show({
@@ -40,30 +37,11 @@ const App: React.FC = () => {
       handleOffline();
     }
 
-    // Banner de instalação PWA
-    const beforeInstallHandler = (e: any) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      setShowInstallBanner(true);
-    };
-    window.addEventListener("beforeinstallprompt", beforeInstallHandler);
-
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
-      window.removeEventListener("beforeinstallprompt", beforeInstallHandler);
     };
   }, []);
-
-  const handleInstallClick = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === "accepted") {
-        setShowInstallBanner(false);
-      }
-    }
-  };
 
   return (
     <>
@@ -99,7 +77,7 @@ const App: React.FC = () => {
         <Route
           path="/blog"
           element={
-            <Layout onBlogClick={openModal}>
+            <Layout>
               <Home />
               <BottomNavigationComponent />
             </Layout>
@@ -108,7 +86,7 @@ const App: React.FC = () => {
         <Route
           path="/post/:id"
           element={
-            <Layout onBlogClick={openModal}>
+            <Layout>
               <PostDetail />
               <BottomNavigationComponent />
             </Layout>

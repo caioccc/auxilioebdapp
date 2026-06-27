@@ -186,7 +186,7 @@ const faqData = [
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' as const } },
 };
 
 const stagger = {
@@ -411,7 +411,7 @@ export default function MentoriaRhema() {
                 <motion.div
                   initial={{ opacity: 0, x: 40 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
+                  transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' as const }}
                   style={{ display: 'flex', justifyContent: 'center' }}
                 >
                   <Box style={{ position: 'relative', width: '100%', maxWidth: 380 }}>
@@ -460,7 +460,7 @@ export default function MentoriaRhema() {
               >
                 <Stack gap="xl" align="center" ta="center">
                   <motion.div variants={fadeUp}>
-                    <Text tt="uppercase" c="orange.6" fw={700} fz="sm" ls={2}>
+                    <Text tt="uppercase" c="orange.6" fw={700} fz="sm" style={{ letterSpacing: 2 }}>
                       O Problema
                     </Text>
                   </motion.div>
@@ -539,7 +539,7 @@ export default function MentoriaRhema() {
               >
                 <Stack gap="xl" align="center" ta="center" mb={56}>
                   <motion.div variants={fadeUp}>
-                    <Text tt="uppercase" c="orange.6" fw={700} fz="sm" ls={2}>
+                    <Text tt="uppercase" c="orange.6" fw={700} fz="sm" style={{ letterSpacing: 2 }}>
                       A Virada
                     </Text>
                   </motion.div>
@@ -644,7 +644,7 @@ export default function MentoriaRhema() {
               >
                 <Stack gap="xl" align="center" ta="center" mb={56}>
                   <motion.div variants={fadeUp}>
-                    <Text tt="uppercase" c="orange.6" fw={700} fz="sm" ls={2}>
+                    <Text tt="uppercase" c="orange.6" fw={700} fz="sm" style={{ letterSpacing: 2 }}>
                       O que você recebe
                     </Text>
                   </motion.div>
@@ -697,7 +697,7 @@ export default function MentoriaRhema() {
               >
                 <Stack gap="xl" align="center" ta="center" mb={56}>
                   <motion.div variants={fadeUp}>
-                    <Text tt="uppercase" c="orange.6" fw={700} fz="sm" ls={2}>
+                    <Text tt="uppercase" c="orange.6" fw={700} fz="sm" style={{ letterSpacing: 2 }}>
                       Planos e Preços
                     </Text>
                   </motion.div>
@@ -818,7 +818,7 @@ export default function MentoriaRhema() {
               >
                 <Stack gap="xl" align="center" ta="center" mb={48}>
                   <motion.div variants={fadeUp}>
-                    <Text tt="uppercase" c="orange.6" fw={700} fz="sm" ls={2}>
+                    <Text tt="uppercase" c="orange.6" fw={700} fz="sm" style={{ letterSpacing: 2 }}>
                       Dúvidas Frequentes
                     </Text>
                   </motion.div>
