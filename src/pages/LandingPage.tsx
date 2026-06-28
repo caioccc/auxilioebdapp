@@ -111,12 +111,12 @@ interface CheckoutInfo {
 
 // Preencha aqui os links reais do Mercado Pago e dos materiais
 const CHECKOUT_URLS: Record<string, CheckoutInfo> = {
-  'trimestral-adultos': { checkoutUrl: 'https://mpago.la/1K44RVn', materialUrl: 'https://drive.google.com/drive/folders/1LTXDyXeBJZA5C-3g5tKog3z7UO5BbNxq?usp=sharing' },
-  'trimestral-jovens': { checkoutUrl: 'https://mpago.la/2LmyxyZ', materialUrl: 'https://drive.google.com/drive/folders/1_ezn1Yh2CTFRIj_nJSKAPq0Epybs_cjC?usp=sharing' },
-  'anual-adultos': { checkoutUrl: 'https://mpago.la/1RvoFtE', materialUrl: 'https://drive.google.com/drive/folders/1LTXDyXeBJZA5C-3g5tKog3z7UO5BbNxq?usp=sharing' },
-  'anual-jovens': { checkoutUrl: 'https://mpago.la/1r6HBUm', materialUrl: 'https://drive.google.com/drive/folders/1_ezn1Yh2CTFRIj_nJSKAPq0Epybs_cjC?usp=sharing' },
-  'completo-trimestral': { checkoutUrl: 'https://mpago.la/14sBuVo', materialUrl: 'https://drive.google.com/drive/folders/17iqsQ3-RKsoumTIbBj6YdXXo08ffpjHo?usp=sharing' },
-  'completo-anual': { checkoutUrl: 'https://mpago.la/2zWW9DD', materialUrl: 'https://drive.google.com/drive/folders/17iqsQ3-RKsoumTIbBj6YdXXo08ffpjHo?usp=sharing' },
+  'trimestral-adultos': { checkoutUrl: 'https://mpago.la/2TKfnv5', materialUrl: 'https://drive.google.com/drive/folders/1G6esx8dF2vPdOYh9ux8FnKbttsnYShDG?usp=sharing' },
+  'trimestral-jovens': { checkoutUrl: 'https://mpago.la/2UKm1jj', materialUrl: 'https://drive.google.com/drive/folders/17iqsQ3-RKsoumTIbBj6YdXXo08ffpjHo?usp=sharing' },
+  'anual-adultos': { checkoutUrl: 'https://mpago.la/2yhFoSL', materialUrl: 'https://drive.google.com/drive/folders/1d1hX-2Yt2H2ZxZic9bn7ojOdcS0SYATV?usp=sharing' },
+  'anual-jovens': { checkoutUrl: 'https://mpago.la/1bgaQNA', materialUrl: 'https://drive.google.com/drive/folders/1TIGdCBGuFYdrSMoBBgcKFz2eSWIDnezz?usp=sharing' },
+  'completo-trimestral': { checkoutUrl: 'https://mpago.la/1FjzgJh', materialUrl: 'https://drive.google.com/drive/folders/1SqpfbqI1KFiIAu3pKH5dDQBWO0bbQzBW?usp=sharing' },
+  'completo-anual': { checkoutUrl: 'https://mpago.la/2xAwjCb', materialUrl: 'https://drive.google.com/drive/folders/1x5UXWBxpiLmNRYYEN_4xiRxbRMQQa78F?usp=sharing' },
 }
 
 interface Plan {

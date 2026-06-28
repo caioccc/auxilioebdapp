@@ -45,40 +45,54 @@ interface PlanObrigadoConfig {
   pageTitle: string
 }
 
+interface CheckoutInfo {
+  checkoutUrl: string
+  materialUrl: string
+}
+
+const CHECKOUT_URLS: Record<string, CheckoutInfo> = {
+  'trimestral-adultos': { checkoutUrl: 'https://mpago.la/2TKfnv5', materialUrl: 'https://drive.google.com/drive/folders/1G6esx8dF2vPdOYh9ux8FnKbttsnYShDG?usp=sharing' },
+  'trimestral-jovens': { checkoutUrl: 'https://mpago.la/2UKm1jj', materialUrl: 'https://drive.google.com/drive/folders/17iqsQ3-RKsoumTIbBj6YdXXo08ffpjHo?usp=sharing' },
+  'anual-adultos': { checkoutUrl: 'https://mpago.la/2yhFoSL', materialUrl: 'https://drive.google.com/drive/folders/1d1hX-2Yt2H2ZxZic9bn7ojOdcS0SYATV?usp=sharing' },
+  'anual-jovens': { checkoutUrl: 'https://mpago.la/1bgaQNA', materialUrl: 'https://drive.google.com/drive/folders/1TIGdCBGuFYdrSMoBBgcKFz2eSWIDnezz?usp=sharing' },
+  'completo-trimestral': { checkoutUrl: 'https://mpago.la/1FjzgJh', materialUrl: 'https://drive.google.com/drive/folders/1SqpfbqI1KFiIAu3pKH5dDQBWO0bbQzBW?usp=sharing' },
+  'completo-anual': { checkoutUrl: 'https://mpago.la/2xAwjCb', materialUrl: 'https://drive.google.com/drive/folders/1x5UXWBxpiLmNRYYEN_4xiRxbRMQQa78F?usp=sharing' },
+}
+
 const PLAN_CONFIG: Record<string, PlanObrigadoConfig> = {
   'trimestral-adultos': {
     title: 'Sua Mentoria Trimestral — Adultos começa agora!',
-    materialUrl: 'https://drive.google.com/drive/folders/1LTXDyXeBJZA5C-3g5tKog3z7UO5BbNxq?usp=sharing',
+    materialUrl: CHECKOUT_URLS['trimestral-adultos'].materialUrl,
     waSupportMsg: 'Olá! Acabei de assinar o plano Trimestral — Adultos e preciso de suporte.',
     pageTitle: 'Mentoria Trimestral — Adultos | Acesso ao Material',
   },
   'trimestral-jovens': {
     title: 'Sua Mentoria Trimestral — Jovens começa agora!',
-    materialUrl: 'https://drive.google.com/drive/folders/1_ezn1Yh2CTFRIj_nJSKAPq0Epybs_cjC?usp=sharing',
+    materialUrl: CHECKOUT_URLS['trimestral-jovens'].materialUrl,
     waSupportMsg: 'Olá! Acabei de assinar o plano Trimestral — Jovens e preciso de suporte.',
     pageTitle: 'Mentoria Trimestral — Jovens | Acesso ao Material',
   },
   'anual-adultos': {
     title: 'Sua Mentoria Anual — Adultos começa agora!',
-    materialUrl: 'https://drive.google.com/drive/folders/1LTXDyXeBJZA5C-3g5tKog3z7UO5BbNxq?usp=sharing',
+    materialUrl: CHECKOUT_URLS['anual-adultos'].materialUrl,
     waSupportMsg: 'Olá! Acabei de assinar o plano Anual — Adultos e preciso de suporte.',
     pageTitle: 'Mentoria Anual — Adultos | Acesso ao Material',
   },
   'anual-jovens': {
     title: 'Sua Mentoria Anual — Jovens começa agora!',
-    materialUrl: 'https://drive.google.com/drive/folders/1_ezn1Yh2CTFRIj_nJSKAPq0Epybs_cjC?usp=sharing',
+    materialUrl: CHECKOUT_URLS['anual-jovens'].materialUrl,
     waSupportMsg: 'Olá! Acabei de assinar o plano Anual — Jovens e preciso de suporte.',
     pageTitle: 'Mentoria Anual — Jovens | Acesso ao Material',
   },
   'completo-trimestral': {
     title: 'Seu plano Completo Trimestral está liberado!',
-    materialUrl: 'https://drive.google.com/drive/folders/17iqsQ3-RKsoumTIbBj6YdXXo08ffpjHo?usp=sharing',
+    materialUrl: CHECKOUT_URLS['completo-trimestral'].materialUrl,
     waSupportMsg: 'Olá! Acabei de assinar o plano Completo Trimestral e preciso de suporte.',
     pageTitle: 'Completo Trimestral | Acesso ao Material',
   },
   'completo-anual': {
     title: 'Seu plano Completo Anual está liberado!',
-    materialUrl: 'https://drive.google.com/drive/folders/17iqsQ3-RKsoumTIbBj6YdXXo08ffpjHo?usp=sharing',
+    materialUrl: CHECKOUT_URLS['completo-anual'].materialUrl,
     waSupportMsg: 'Olá! Acabei de assinar o plano Completo Anual e preciso de suporte.',
     pageTitle: 'Completo Anual | Acesso ao Material',
   },
