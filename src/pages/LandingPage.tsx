@@ -978,10 +978,17 @@ export default function MentoriaRhema() {
                           ) : (
                             <Stack gap="xs">
                               <Button
-                                component="a"
-                                href={CHECKOUT_URLS[plan.planId].checkoutUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                onClick={() => {
+                                  localStorage.setItem(
+                                    "selectedPlanId",
+                                    plan.planId,
+                                  );
+                                  window.open(
+                                    CHECKOUT_URLS[plan.planId].checkoutUrl,
+                                    "_blank",
+                                    "noopener noreferrer",
+                                  );
+                                }}
                                 color={plan.highlight ? "orange.6" : "blue.8"}
                                 radius="xl"
                                 fullWidth
@@ -1220,13 +1227,14 @@ export default function MentoriaRhema() {
                     cursor: "pointer",
                     transition: "border-color 0.2s",
                   }}
-                  onClick={() =>
+                  onClick={() => {
+                    localStorage.setItem("selectedPlanId", key);
                     window.open(
                       info.checkoutUrl,
                       "_blank",
                       "noopener noreferrer",
-                    )
-                  }
+                    );
+                  }}
                 >
                   <Stack gap="md" align="center" ta="center">
                     <Image

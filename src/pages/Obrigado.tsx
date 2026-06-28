@@ -27,7 +27,8 @@ import {
 } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
-import { Link, useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 // ─── Configurações ───────────────────────────────────────────────────────────
 
@@ -198,6 +199,20 @@ const STATUS_CONFIG: Record<
 export default function ObrigadoRhema() {
   const theme = useMantineTheme();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const plan = searchParams.get("plan");
+    if (!plan) {
+      const savedPlan = localStorage.getItem("selectedPlanId");
+      if (savedPlan) {
+        localStorage.removeItem("selectedPlanId");
+        const params = new URLSearchParams(searchParams);
+        params.set("plan", savedPlan);
+        navigate(`/obrigado?${params.toString()}`, { replace: true });
+      }
+    }
+  }, []);
 
   const paymentStatus = (searchParams.get("status") ||
     "approved") as PaymentStatus;
