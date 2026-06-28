@@ -14,7 +14,7 @@ import {
   Text,
   ThemeIcon,
   Title,
-  useMantineTheme
+  useMantineTheme,
 } from "@mantine/core";
 import {
   IconBook,
@@ -23,11 +23,11 @@ import {
   IconCircleX,
   IconClockDollar,
   IconExternalLink,
-  IconStar
+  IconStar,
 } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 // ─── Configurações ───────────────────────────────────────────────────────────
 
@@ -39,77 +39,111 @@ const waLink = (msg: string) =>
 // ─── Config por plano ────────────────────────────────────────────────────────
 
 interface PlanObrigadoConfig {
-  title: string
-  materialUrl: string
-  waSupportMsg: string
-  pageTitle: string
+  title: string;
+  materialUrl: string;
+  waSupportMsg: string;
+  pageTitle: string;
 }
 
 interface CheckoutInfo {
-  checkoutUrl: string
-  materialUrl: string
+  checkoutUrl: string;
+  materialUrl: string;
 }
 
 const CHECKOUT_URLS: Record<string, CheckoutInfo> = {
-  'trimestral-adultos': { checkoutUrl: 'https://mpago.la/2TKfnv5', materialUrl: 'https://drive.google.com/drive/folders/1G6esx8dF2vPdOYh9ux8FnKbttsnYShDG?usp=sharing' },
-  'trimestral-jovens': { checkoutUrl: 'https://mpago.la/2UKm1jj', materialUrl: 'https://drive.google.com/drive/folders/17iqsQ3-RKsoumTIbBj6YdXXo08ffpjHo?usp=sharing' },
-  'anual-adultos': { checkoutUrl: 'https://mpago.la/2yhFoSL', materialUrl: 'https://drive.google.com/drive/folders/1d1hX-2Yt2H2ZxZic9bn7ojOdcS0SYATV?usp=sharing' },
-  'anual-jovens': { checkoutUrl: 'https://mpago.la/1bgaQNA', materialUrl: 'https://drive.google.com/drive/folders/1TIGdCBGuFYdrSMoBBgcKFz2eSWIDnezz?usp=sharing' },
-  'completo-trimestral': { checkoutUrl: 'https://mpago.la/1FjzgJh', materialUrl: 'https://drive.google.com/drive/folders/1SqpfbqI1KFiIAu3pKH5dDQBWO0bbQzBW?usp=sharing' },
-  'completo-anual': { checkoutUrl: 'https://mpago.la/2xAwjCb', materialUrl: 'https://drive.google.com/drive/folders/1x5UXWBxpiLmNRYYEN_4xiRxbRMQQa78F?usp=sharing' },
-}
+  "trimestral-adultos": {
+    checkoutUrl: "https://mpago.la/2TKfnv5",
+    materialUrl:
+      "https://drive.google.com/drive/folders/1G6esx8dF2vPdOYh9ux8FnKbttsnYShDG?usp=sharing",
+  },
+  "trimestral-jovens": {
+    checkoutUrl: "https://mpago.la/2UKm1jj",
+    materialUrl:
+      "https://drive.google.com/drive/folders/17iqsQ3-RKsoumTIbBj6YdXXo08ffpjHo?usp=sharing",
+  },
+  "anual-adultos": {
+    checkoutUrl: "https://mpago.la/2yhFoSL",
+    materialUrl:
+      "https://drive.google.com/drive/folders/1d1hX-2Yt2H2ZxZic9bn7ojOdcS0SYATV?usp=sharing",
+  },
+  "anual-jovens": {
+    checkoutUrl: "https://mpago.la/1bgaQNA",
+    materialUrl:
+      "https://drive.google.com/drive/folders/1TIGdCBGuFYdrSMoBBgcKFz2eSWIDnezz?usp=sharing",
+  },
+  "completo-trimestral": {
+    checkoutUrl: "https://mpago.la/1FjzgJh",
+    materialUrl:
+      "https://drive.google.com/drive/folders/1SqpfbqI1KFiIAu3pKH5dDQBWO0bbQzBW?usp=sharing",
+  },
+  "completo-anual": {
+    checkoutUrl: "https://mpago.la/2xAwjCb",
+    materialUrl:
+      "https://drive.google.com/drive/folders/1x5UXWBxpiLmNRYYEN_4xiRxbRMQQa78F?usp=sharing",
+  },
+};
 
 const PLAN_CONFIG: Record<string, PlanObrigadoConfig> = {
-  'trimestral-adultos': {
-    title: 'Sua Mentoria Trimestral — Adultos começa agora!',
-    materialUrl: CHECKOUT_URLS['trimestral-adultos'].materialUrl,
-    waSupportMsg: 'Olá! Acabei de assinar o plano Trimestral — Adultos e preciso de suporte.',
-    pageTitle: 'Mentoria Trimestral — Adultos | Acesso ao Material',
+  "trimestral-adultos": {
+    title: "Sua Mentoria Trimestral — Adultos começa agora!",
+    materialUrl: CHECKOUT_URLS["trimestral-adultos"].materialUrl,
+    waSupportMsg:
+      "Olá! Acabei de assinar o plano Trimestral — Adultos e preciso de suporte.",
+    pageTitle: "Mentoria Trimestral — Adultos | Acesso ao Material",
   },
-  'trimestral-jovens': {
-    title: 'Sua Mentoria Trimestral — Jovens começa agora!',
-    materialUrl: CHECKOUT_URLS['trimestral-jovens'].materialUrl,
-    waSupportMsg: 'Olá! Acabei de assinar o plano Trimestral — Jovens e preciso de suporte.',
-    pageTitle: 'Mentoria Trimestral — Jovens | Acesso ao Material',
+  "trimestral-jovens": {
+    title: "Sua Mentoria Trimestral — Jovens começa agora!",
+    materialUrl: CHECKOUT_URLS["trimestral-jovens"].materialUrl,
+    waSupportMsg:
+      "Olá! Acabei de assinar o plano Trimestral — Jovens e preciso de suporte.",
+    pageTitle: "Mentoria Trimestral — Jovens | Acesso ao Material",
   },
-  'anual-adultos': {
-    title: 'Sua Mentoria Anual — Adultos começa agora!',
-    materialUrl: CHECKOUT_URLS['anual-adultos'].materialUrl,
-    waSupportMsg: 'Olá! Acabei de assinar o plano Anual — Adultos e preciso de suporte.',
-    pageTitle: 'Mentoria Anual — Adultos | Acesso ao Material',
+  "anual-adultos": {
+    title: "Sua Mentoria Anual — Adultos começa agora!",
+    materialUrl: CHECKOUT_URLS["anual-adultos"].materialUrl,
+    waSupportMsg:
+      "Olá! Acabei de assinar o plano Anual — Adultos e preciso de suporte.",
+    pageTitle: "Mentoria Anual — Adultos | Acesso ao Material",
   },
-  'anual-jovens': {
-    title: 'Sua Mentoria Anual — Jovens começa agora!',
-    materialUrl: CHECKOUT_URLS['anual-jovens'].materialUrl,
-    waSupportMsg: 'Olá! Acabei de assinar o plano Anual — Jovens e preciso de suporte.',
-    pageTitle: 'Mentoria Anual — Jovens | Acesso ao Material',
+  "anual-jovens": {
+    title: "Sua Mentoria Anual — Jovens começa agora!",
+    materialUrl: CHECKOUT_URLS["anual-jovens"].materialUrl,
+    waSupportMsg:
+      "Olá! Acabei de assinar o plano Anual — Jovens e preciso de suporte.",
+    pageTitle: "Mentoria Anual — Jovens | Acesso ao Material",
   },
-  'completo-trimestral': {
-    title: 'Seu plano Completo Trimestral está liberado!',
-    materialUrl: CHECKOUT_URLS['completo-trimestral'].materialUrl,
-    waSupportMsg: 'Olá! Acabei de assinar o plano Completo Trimestral e preciso de suporte.',
-    pageTitle: 'Completo Trimestral | Acesso ao Material',
+  "completo-trimestral": {
+    title: "Seu plano Completo Trimestral está liberado!",
+    materialUrl: CHECKOUT_URLS["completo-trimestral"].materialUrl,
+    waSupportMsg:
+      "Olá! Acabei de assinar o plano Completo Trimestral e preciso de suporte.",
+    pageTitle: "Completo Trimestral | Acesso ao Material",
   },
-  'completo-anual': {
-    title: 'Seu plano Completo Anual está liberado!',
-    materialUrl: CHECKOUT_URLS['completo-anual'].materialUrl,
-    waSupportMsg: 'Olá! Acabei de assinar o plano Completo Anual e preciso de suporte.',
-    pageTitle: 'Completo Anual | Acesso ao Material',
+  "completo-anual": {
+    title: "Seu plano Completo Anual está liberado!",
+    materialUrl: CHECKOUT_URLS["completo-anual"].materialUrl,
+    waSupportMsg:
+      "Olá! Acabei de assinar o plano Completo Anual e preciso de suporte.",
+    pageTitle: "Completo Anual | Acesso ao Material",
   },
-}
+};
 
 const FALLBACK_CONFIG: PlanObrigadoConfig = {
-  title: 'Sua jornada de excelência no ensino bíblico começa agora!',
-  materialUrl: '#',
-  waSupportMsg: 'Olá! Acabei de assinar a Mentoria e preciso de suporte.',
-  pageTitle: 'Bem-vindo à Mentoria RHEMA — Acesso ao Material',
-}
+  title: "Sua jornada de excelência no ensino bíblico começa agora!",
+  materialUrl: "#",
+  waSupportMsg: "Olá! Acabei de assinar a Mentoria e preciso de suporte.",
+  pageTitle: "Bem-vindo à Mentoria RHEMA — Acesso ao Material",
+};
 
 // ─── Animações ──────────────────────────────────────────────────────────────
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const },
+  },
 };
 
 const stagger = {
@@ -121,13 +155,16 @@ const stagger = {
 
 type PaymentStatus = "approved" | "pending" | "failure" | "unknown";
 
-const STATUS_CONFIG: Record<PaymentStatus, {
-  badgeColor: string;
-  badgeIcon: React.ReactNode;
-  badgeLabel: string;
-  title: string;
-  showMaterial: boolean;
-}> = {
+const STATUS_CONFIG: Record<
+  PaymentStatus,
+  {
+    badgeColor: string;
+    badgeIcon: React.ReactNode;
+    badgeLabel: string;
+    title: string;
+    showMaterial: boolean;
+  }
+> = {
   approved: {
     badgeColor: "green.6",
     badgeIcon: <IconCircleCheck size={16} />,
@@ -162,8 +199,10 @@ export default function ObrigadoRhema() {
   const theme = useMantineTheme();
   const [searchParams] = useSearchParams();
 
-  const paymentStatus = (searchParams.get("status") || "approved") as PaymentStatus;
-  const paymentId = searchParams.get("payment_id") || searchParams.get("collection_id") || "";
+  const paymentStatus = (searchParams.get("status") ||
+    "approved") as PaymentStatus;
+  const paymentId =
+    searchParams.get("payment_id") || searchParams.get("collection_id") || "";
   const externalRef = searchParams.get("external_reference") || "";
   const planId = searchParams.get("plan") || "";
 
@@ -191,17 +230,19 @@ export default function ObrigadoRhema() {
         >
           <Container size="xl" h="100%">
             <Flex align="center" justify="space-between" h="100%">
-              <Group gap="sm">
-                <Image src="/logo2.png" h={46} w="auto" fit="contain" />
-                <Text
-                  fw={700}
-                  fz="lg"
-                  c="blue.9"
-                  style={{ letterSpacing: "-0.02em" }}
-                >
-                  Mentoria RHEMA
-                </Text>
-              </Group>
+              <Link to="/" style={{ textDecoration: "none" }}>
+                <Group gap="sm">
+                  <Image src="/logo2.png" h={46} w="auto" fit="contain" />
+                  <Text
+                    fw={700}
+                    fz="lg"
+                    c="blue.9"
+                    style={{ letterSpacing: "-0.02em" }}
+                  >
+                    Mentoria RHEMA
+                  </Text>
+                </Group>
+              </Link>
 
               <Button
                 component="a"
@@ -254,18 +295,28 @@ export default function ObrigadoRhema() {
                       c="blue.9"
                       style={{ letterSpacing: "-0.02em" }}
                     >
-                      {paymentStatus === "approved" || paymentStatus === "unknown"
+                      {paymentStatus === "approved" ||
+                      paymentStatus === "unknown"
                         ? planConfig.title
                         : statusConfig.title}
                     </Title>
                   </motion.div>
 
                   {paymentStatus === "failure" && (
-                    <motion.div variants={fadeUp} style={{ width: "100%", maxWidth: 600 }}>
-                      <Card radius="xl" p="xl" withBorder style={{ borderColor: theme.colors.red[2] }}>
+                    <motion.div
+                      variants={fadeUp}
+                      style={{ width: "100%", maxWidth: 600 }}
+                    >
+                      <Card
+                        radius="xl"
+                        p="xl"
+                        withBorder
+                        style={{ borderColor: theme.colors.red[2] }}
+                      >
                         <Stack gap="md" align="center">
                           <Text fz="sm" c="gray.6" ta="center">
-                            O pagamento foi recusado ou cancelado. Tente novamente ou entre em contato conosco pelo WhatsApp.
+                            O pagamento foi recusado ou cancelado. Tente
+                            novamente ou entre em contato conosco pelo WhatsApp.
                           </Text>
                           <Button
                             component="a"
@@ -283,11 +334,21 @@ export default function ObrigadoRhema() {
                   )}
 
                   {paymentStatus === "pending" && (
-                    <motion.div variants={fadeUp} style={{ width: "100%", maxWidth: 600 }}>
-                      <Card radius="xl" p="xl" withBorder style={{ borderColor: theme.colors.yellow[2] }}>
+                    <motion.div
+                      variants={fadeUp}
+                      style={{ width: "100%", maxWidth: 600 }}
+                    >
+                      <Card
+                        radius="xl"
+                        p="xl"
+                        withBorder
+                        style={{ borderColor: theme.colors.yellow[2] }}
+                      >
                         <Stack gap="md" align="center">
                           <Text fz="sm" c="gray.6" ta="center">
-                            Assim que o pagamento for aprovado, você receberá o acesso automaticamente. Fique de olho no seu WhatsApp.
+                            Assim que o pagamento for aprovado, você receberá o
+                            acesso automaticamente. Fique de olho no seu
+                            WhatsApp.
                           </Text>
                         </Stack>
                       </Card>
@@ -312,10 +373,7 @@ export default function ObrigadoRhema() {
                       >
                         <Stack gap="md" align="center">
                           <ThemeIcon size={56} radius="xl" color="blue.0">
-                            <IconBook
-                              size={28}
-                              color={theme.colors.blue[8]}
-                            />
+                            <IconBook size={28} color={theme.colors.blue[8]} />
                           </ThemeIcon>
                           <Title order={3} fz="xl" c="blue.9">
                             Acesse sua Área de Membros / Materiais
@@ -325,22 +383,22 @@ export default function ObrigadoRhema() {
                             plataforma com todas as 13 lições e os bônus do
                             trimestre.
                           </Text>
-                        <Button
-                          component="a"
-                          href={planConfig.materialUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          color="blue.8"
-                          size="lg"
-                          radius="xl"
-                          fullWidth
-                          rightSection={<IconExternalLink size={18} />}
-                          style={{
-                            boxShadow: "0 4px 16px rgba(29,78,216,0.2)",
-                          }}
-                        >
-                          Acessar Meus Materiais Agora
-                        </Button>
+                          <Button
+                            component="a"
+                            href={planConfig.materialUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            color="blue.8"
+                            size="lg"
+                            radius="xl"
+                            fullWidth
+                            rightSection={<IconExternalLink size={18} />}
+                            style={{
+                              boxShadow: "0 4px 16px rgba(29,78,216,0.2)",
+                            }}
+                          >
+                            Acessar Meus Materiais Agora
+                          </Button>
                         </Stack>
                       </Card>
                     </motion.div>
@@ -468,7 +526,8 @@ export default function ObrigadoRhema() {
 
                   {paymentId && (
                     <Text fz="xs" c="gray.4" mt="xs">
-                      Ref: {paymentId}{externalRef ? ` — ${externalRef}` : ""}
+                      Ref: {paymentId}
+                      {externalRef ? ` — ${externalRef}` : ""}
                     </Text>
                   )}
                 </Stack>
